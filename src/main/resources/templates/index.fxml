@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cristian.TaskApplication.controller.IndexController">
+   <children>
+      <ToolBar layoutY="-6.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="44.0" style="-fx-background-color: linear-gradient(to bottom left, #ff7f50, #6a5acd);;" AnchorPane.bottomAnchor="356.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <items>
+            <Label text="Sistema de Tareas" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </items>
+         <effect>
+            <Blend mode="LIGHTEN" />
+         </effect>
+      </ToolBar>
+      <TableView fx:id="tableTask" layoutX="230.0" layoutY="57.0" prefHeight="313.0" prefWidth="331.0">
+        <columns>
+          <TableColumn fx:id="idTaskColumn" editable="false" prefWidth="55.0" text="ID" />
+          <TableColumn fx:id="taskColumn" editable="false" prefWidth="139.0" text="Tarea" />
+            <TableColumn fx:id="responsibleTask" editable="false" prefWidth="85.0" text="Responsable" />
+            <TableColumn fx:id="statusTask" editable="false" prefWidth="50.0" text="Status" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

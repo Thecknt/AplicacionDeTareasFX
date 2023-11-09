@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,24 @@ public class IndexController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-    //Configuro para que solo se pueda seleccionar un elemento de la Tabla
-tableTask.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        //Configuro para que solo se pueda seleccionar un elemento de la Tabla
+        //Para eliminar o editar un registro
+        tableTask.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        configColumns();
+        showTasks();
+    }
+
+    private void configColumns() {
+        idTaskColumn.setCellValueFactory(new PropertyValueFactory<>("idTask"));
+        taskColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
+        responsibleTask.setCellValueFactory(new PropertyValueFactory<>("taskResponsible"));
+        statusTask.setCellValueFactory(new PropertyValueFactory<>("taskStatus"));
+    }
+
+    private void showTasks() {
+        //Limpio la tabla
+        taskList.clear();
+        taskList.addAll(taskService.showAllTask());
+        tableTask.setItems(taskList);
     }
 }

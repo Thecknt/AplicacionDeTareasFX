@@ -19,7 +19,6 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idTask;
-
     private String taskName;
     private String taskResponsible;
     private String taskStatus;

@@ -87,12 +87,20 @@ public class IndexController implements Initializable {
     }
 
     public void addButton() {
+      Task task2 = tableTask.getSelectionModel().getSelectedItem();
+
         if (nameText.getText().isEmpty()) {
             showMessage("Error Campo Vacio", "Ingrese el nombre de la Tarea");
             nameText.requestFocus();
             return;
+        } else if (nameText.getText().equals(task2.getTaskName())) {
+            System.out.println("primer variable: " + nameText.getText());
+            System.out.println("Que tengo guardado en esta variable: " + task2.getTaskName());
+            showMessage("Informacion", "La tarea ya se encuentra agregada al listado");
+            nameText.requestFocus();
+            return;
         } else {
-            Task task = new Task();
+           Task task = new Task();
             captureDataForm(task);
             task.setIdTask(null);
             taskService.saveTask(task);
@@ -112,7 +120,7 @@ public class IndexController implements Initializable {
         }
     }
 
-    private void captureDataForm(Task task) {
+    public void captureDataForm(Task task) {
         if (internalID != null)
             task.setIdTask(internalID);
         task.setTaskName(nameText.getText());
@@ -121,12 +129,28 @@ public class IndexController implements Initializable {
     }
 
     private void cleanForm() {
+        internalID = null;
         nameText.clear();
         responsibleText.clear();
         statusText.clear();
     }
 
     public void deleteButton() {
+        Task task = new Task();
+        if (internalID == null) {
+            showMessage("Campo vacio", "Debe seleccionar una tarea");
+            return;
+        }
+        if (nameText.getText().isEmpty()) {
+            showMessage("Campo vacio", "Debe ingresar una tarea");
+            nameText.requestFocus();
+            return;
+        }
+        captureDataForm(task);
+        taskService.deleteTask(task);
+        showMessage("Informacion", "Tarea Eliminada con exito!");
+        cleanForm();
+        showTasks();
     }
 
     public void modifyButton() {
@@ -139,9 +163,12 @@ public class IndexController implements Initializable {
             nameText.requestFocus();
             return;
         }
-
         Task task = new Task();
         captureDataForm(task);
+        taskService.saveTask(task);
+        showMessage("Informacion", "Tarea modificada con exito!");
+        cleanForm();
+        showTasks();
     }
 
     public void clearButton() {

@@ -4,6 +4,8 @@ import com.cristian.TaskApplication.model.Task;
 import com.cristian.TaskApplication.service.TaskService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -52,8 +54,22 @@ public class IndexController implements Initializable {
     @FXML
     private TextField responsibleText;
 
+    //@FXML
+    //private TextField statusText;
+
     @FXML
-    private TextField statusText;
+    private ComboBox<String> comboBox;
+
+    @FXML
+    private String comboBoxEvent() {
+        //String dataComboSelected = e.getTarget().toString();
+        //Object evt = e.getSource();
+
+        String resultChoise = comboBox.getSelectionModel().getSelectedItem();
+        System.out.println(resultChoise);
+
+        return resultChoise;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,7 +78,11 @@ public class IndexController implements Initializable {
         tableTask.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         configColumns();
         showTasks();
+        comboBox.getItems().add("Pendiente");
+        comboBox.getItems().add("En Proceso");
+        comboBox.getItems().add("Completado");
     }
+
 
     private void configColumns() {
         idTaskColumn.setCellValueFactory(new PropertyValueFactory<>("idTask"));
@@ -87,21 +107,14 @@ public class IndexController implements Initializable {
     }
 
     public void addButton() {
-      //Task task2 = tableTask.getSelectionModel().getSelectedItem();
-
         if (nameText.getText().isEmpty()) {
             showMessage("Error Campo Vacio", "Ingrese el nombre de la Tarea");
             nameText.requestFocus();
             return;
         }
-       /* if (nameText.getText().equals(task2.getTaskName())) {
-            System.out.println("primer variable: " + nameText.getText());
-            System.out.println("Que tengo guardado en esta variable: " + task2.getTaskName());
-            showMessage("Informacion", "La tarea ya se encuentra agregada al listado");
-            nameText.requestFocus();
-            return;
-        }*/ else {
-           Task task = new Task();
+        else {
+
+            Task task = new Task();
             captureDataForm(task);
             task.setIdTask(null);
             taskService.saveTask(task);
@@ -117,23 +130,24 @@ public class IndexController implements Initializable {
             internalID = task.getIdTask();
             nameText.setText(task.getTaskName());
             responsibleText.setText(task.getTaskResponsible());
-            statusText.setText(task.getTaskStatus());
+           // statusText.setText(task.getTaskStatus());
         }
     }
 
     public void captureDataForm(Task task) {
         if (internalID != null)
+            //comboBoxEvent();
             task.setIdTask(internalID);
         task.setTaskName(nameText.getText());
         task.setTaskResponsible(responsibleText.getText());
-        task.setTaskStatus(statusText.getText());
+        task.setTaskStatus(comboBoxEvent());
     }
 
     private void cleanForm() {
         internalID = null;
         nameText.clear();
         responsibleText.clear();
-        statusText.clear();
+        //statusText.clear();
     }
 
     public void deleteButton() {

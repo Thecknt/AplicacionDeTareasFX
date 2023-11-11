@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class SystemTaskFX extends Application {
@@ -31,6 +32,7 @@ public class SystemTaskFX extends Application {
     //Ahora llamo la escena de javaFX
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
+        stage.setResizable(false); //Con esta linea logro que no se pueda maximizar la pantalla.
         stage.show();
     }
 

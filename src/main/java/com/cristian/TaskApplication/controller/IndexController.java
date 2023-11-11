@@ -6,9 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +41,19 @@ public class IndexController implements Initializable {
     @FXML
     private TableColumn<Task, String> statusTask;
 
+    private Integer internalID;
+
     //Con esto ya tengo los elementos para poder cargar la tabla
     private final ObservableList<Task> taskList = FXCollections.observableArrayList();
+
+    @FXML
+    private TextField nameText;
+
+    @FXML
+    private TextField responsibleText;
+
+    @FXML
+    private TextField statusText;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,10 +71,80 @@ public class IndexController implements Initializable {
         statusTask.setCellValueFactory(new PropertyValueFactory<>("taskStatus"));
     }
 
+    private void showMessage(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     private void showTasks() {
         //Limpio la tabla
         taskList.clear();
         taskList.addAll(taskService.showAllTask());
         tableTask.setItems(taskList);
+    }
+
+    public void addButton() {
+        if (nameText.getText().isEmpty()) {
+            showMessage("Error Campo Vacio", "Ingrese el nombre de la Tarea");
+            nameText.requestFocus();
+            return;
+        } else {
+            Task task = new Task();
+            captureDataForm(task);
+            task.setIdTask(null);
+            taskService.saveTask(task);
+            showMessage("Informacion", "Tarea agregada con Exito!");
+            cleanForm();
+            showTasks();
+        }
+    }
+
+    public void loadDataForm() {
+        Task task = tableTask.getSelectionModel().getSelectedItem();
+        if (task != null) {
+            internalID = task.getIdTask();
+            nameText.setText(task.getTaskName());
+            responsibleText.setText(task.getTaskResponsible());
+            statusText.setText(task.getTaskStatus());
+        }
+    }
+
+    private void captureDataForm(Task task) {
+        if (internalID != null)
+            task.setIdTask(internalID);
+        task.setTaskName(nameText.getText());
+        task.setTaskResponsible(responsibleText.getText());
+        task.setTaskStatus(statusText.getText());
+    }
+
+    private void cleanForm() {
+        nameText.clear();
+        responsibleText.clear();
+        statusText.clear();
+    }
+
+    public void deleteButton() {
+    }
+
+    public void modifyButton() {
+        if (internalID == null) {
+            showMessage("Campo vacio", "Debe seleccionar una tarea");
+            return;
+        }
+        if (nameText.getText().isEmpty()) {
+            showMessage("Campo vacio", "Debe ingresar una tarea");
+            nameText.requestFocus();
+            return;
+        }
+
+        Task task = new Task();
+        captureDataForm(task);
+    }
+
+    public void clearButton() {
+        cleanForm();
     }
 }

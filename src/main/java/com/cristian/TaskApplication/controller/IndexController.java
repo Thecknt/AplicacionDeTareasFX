@@ -87,19 +87,20 @@ public class IndexController implements Initializable {
     }
 
     public void addButton() {
-      Task task2 = tableTask.getSelectionModel().getSelectedItem();
+      //Task task2 = tableTask.getSelectionModel().getSelectedItem();
 
         if (nameText.getText().isEmpty()) {
             showMessage("Error Campo Vacio", "Ingrese el nombre de la Tarea");
             nameText.requestFocus();
             return;
-        } else if (nameText.getText().equals(task2.getTaskName())) {
+        }
+       /* if (nameText.getText().equals(task2.getTaskName())) {
             System.out.println("primer variable: " + nameText.getText());
             System.out.println("Que tengo guardado en esta variable: " + task2.getTaskName());
             showMessage("Informacion", "La tarea ya se encuentra agregada al listado");
             nameText.requestFocus();
             return;
-        } else {
+        }*/ else {
            Task task = new Task();
             captureDataForm(task);
             task.setIdTask(null);

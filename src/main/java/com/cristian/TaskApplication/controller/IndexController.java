@@ -4,25 +4,19 @@ import com.cristian.TaskApplication.model.Task;
 import com.cristian.TaskApplication.service.TaskService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Controller
 public class IndexController implements Initializable {
 
-    //Creo un logger por si necesito enviar mensajes a la consola, pero podrias hacerlo con un sout tambien
-    //private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
     @Autowired
     private TaskService taskService;
 
@@ -54,16 +48,12 @@ public class IndexController implements Initializable {
     @FXML
     private TextField responsibleText;
 
-    //@FXML
-    //private TextField statusText;
-
     @FXML
     private ComboBox<String> comboBox;
 
     @FXML
     private String comboBoxEvent() {
-        //String dataComboSelected = e.getTarget().toString();
-        //Object evt = e.getSource();
+
 
         String resultChoise = comboBox.getSelectionModel().getSelectedItem();
         System.out.println(resultChoise);
@@ -112,7 +102,18 @@ public class IndexController implements Initializable {
             nameText.requestFocus();
             return;
         }
-        else {
+
+        // Verificar si la tarea ya existe en la base de datos
+        String taskName = nameText.getText();
+        List<Task> list = taskService.showAllTask();
+
+        for (Task e : list) {
+            if (e.getTaskName().equals(taskName)) {
+                showMessage("Error", "Ya existe una tarea con ese nombre");
+                cleanForm();
+                return;  // Sale del método si encuentra una tarea con el mismo nombre
+            }
+        }
 
             Task task = new Task();
             captureDataForm(task);
@@ -121,7 +122,6 @@ public class IndexController implements Initializable {
             showMessage("Informacion", "Tarea agregada con Exito!");
             cleanForm();
             showTasks();
-        }
     }
 
     public void loadDataForm() {
@@ -130,7 +130,6 @@ public class IndexController implements Initializable {
             internalID = task.getIdTask();
             nameText.setText(task.getTaskName());
             responsibleText.setText(task.getTaskResponsible());
-           // statusText.setText(task.getTaskStatus());
         }
     }
 
@@ -147,7 +146,7 @@ public class IndexController implements Initializable {
         internalID = null;
         nameText.clear();
         responsibleText.clear();
-        //statusText.clear();
+        comboBox.setValue("Opciones");
     }
 
     public void deleteButton() {
@@ -189,4 +188,5 @@ public class IndexController implements Initializable {
     public void clearButton() {
         cleanForm();
     }
+
 }
